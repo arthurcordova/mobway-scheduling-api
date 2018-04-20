@@ -69,6 +69,7 @@ api.post('/addPhysician', (req, res) => {
             gender: req.body.gender,
             specialty: req.body.specialty,
             crm: req.body.crm,
+            about: req.body.about,
             accept_insurance: req.body.accept_insurance,
             accept_card: req.body.accept_card,
             accept_money: req.body.accept_money,
@@ -155,13 +156,11 @@ api.get('/getSchedulings', (req, res) => {
     });
 });
 
-exports.api = functions.https.onRequest(api);
-
 /**
  * @param query {uid?String}
  * @returns Returns list or unique physician.
  */
-exports.getPhysicians = functions.https.onRequest((req, res) => {
+api.get('/getPhysicians', (req, res) => {
     var db;
     if (req.query.uid === undefined) {
         db = admin.database().ref(entity_physicians);
@@ -174,10 +173,8 @@ exports.getPhysicians = functions.https.onRequest((req, res) => {
     });
 });
 
-/**
- * @param query {uid?String}
- * @returns Returns list or unique physician.
- */
+exports.api = functions.https.onRequest(api);
+
 exports.getSpecialties = functions.https.onRequest((req, res) => {
     var db;
     if (req.query.uid === undefined) {
@@ -185,13 +182,7 @@ exports.getSpecialties = functions.https.onRequest((req, res) => {
         db.once('value').then(function(snap) {
             res.status(200).json(snapshotToArray(snap));
         });
-    } else {
-        db = admin.database().ref(entity_specialty).child(req.query.uid);
-        db.once('value').then(function(snap) {
-            res.status(200).json(snap);
-        });
     }
-
 });
 
 function snapshotToArray(snapshot) {
