@@ -16,6 +16,7 @@ const entity_patients = 'patients';
 const entity_physicians = 'physicians';
 const entity_scheduling = 'scheduling';
 const entity_specialty = 'specialty';
+const entity_user = 'user';
 
 const validateFirebaseIdToken = (req, res, next) => {
     console.log('Check if request is authorized with Firebase ID token');
@@ -185,6 +186,33 @@ exports.getSpecialties = functions.https.onRequest((req, res) => {
     }
 });
 
+exports.addUser = functions.https.onRequest((req, res) => {
+    if (req.body === undefined) {
+        res.status(400).json({ type: 'error', message: 'No user defined!' });
+    } else {
+        let ref = admin.database().ref(entity_user);
+        let create = moment().tz("America/Sao_Paulo").format();
+        ref.child(req.body.uid)
+            .set({
+                email: req.body.email,
+                name: req.body.name,
+                phone: req.body.phone,
+                gender: req.body.gender,
+                loginType: req.body.loginType,
+                fcmToken: req.body.fcmToken,
+                photoUrl: req.body.photoUrl,
+                isFirstAccess: req.body.isFirstAccess,
+                isEmailVerified: req.body.isEmailVerified,
+                createdAt: create
+            }).then(snapshot => {
+                res.status(200).json({
+                    uid: req.body.uid,
+                    createdAt: create
+                });
+            });;
+    }
+});
+
 function snapshotToArray(snapshot) {
     var returnArr = [];
 
@@ -197,3 +225,16 @@ function snapshotToArray(snapshot) {
 
     return returnArr;
 };
+
+/** TODO:
+ * const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
+
+exports.foo = functions.database.ref('/bar').onWrite(event => {
+  const tokens = ...;
+  const payload = ...;
+  return return admin.messaging().sendToDevice(tokens, payload);  
+})
+ * 
+ */

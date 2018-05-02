@@ -136,3 +136,36 @@ Uses to get physicians.
     }
 ]
 ```
+
+# **POST** - **/addUser**
+
+**Description**
+
+Uses to add new user linked with firebase auth.
+
+**Request**
+- Content-Type : Application/json
+- Body parameters:
+```json
+{
+	"uid": "0jgzgfxaCESLm1PFBQlZmEhJ6qi2",
+	"email": "hemanuelx@gmail.com",
+	"name":"Hemanuel Xafranski",
+	"phone": "(47) 99999-8978",
+	"gender": "male",
+	"loginType": "facebook",
+	"isFirstAccess" : true,
+	"isEmailVerified": false,
+	"fcmToken": "ewr",
+	"photoUrl": "sdfsd"
+}
+```
+**Response**
+- Content-Type : Application/json
+- Body response:
+```json
+{
+    "uid": "0jgzgfxaCESLm1PFBQlZmEhJ6qi2",
+    "createdAt": "2018-04-20T16:16:37-03:00"
+}
+```
